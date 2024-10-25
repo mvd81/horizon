@@ -28,24 +28,52 @@ class PendingJobsController extends Controller
     }
 
     /**
-     * Get all of the pending jobs.
+     * Get all the pending jobs.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function index(Request $request)
     {
+        $jobs = ! $request->query('tag')
+            ? $this->paginate($request)
+            : $this->paginateByTag($request, $request->query('tag'));
 
-        $jobs = $this->jobs->getPending($request->query('starting_at', -1))->map(function ($job) {
-            $job->payload = json_decode($job->payload);
-
-            return $job;
-        })->values();
+        $total = $jobs->count();
 
         return [
             'jobs' => $jobs,
-            'total' => $this->jobs->countPending(),
+            'total' => $total,
         ];
+    }
+
+    /**
+     * Paginate the pending jobs for the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Support\Collection
+     */
+    protected function paginate(Request $request)
+    {
+        return $this->jobs->getPending($request->query('starting_at') ?: -1)->map(function ($job) {
+            return $this->decode($job);
+        });
+    }
+
+    /**
+     * Paginate the pending jobs for the request and tag.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param $tag
+     * @return \Illuminate\Support\Collection
+     */
+    protected function paginateByTag(Request $request, $tag)
+    {
+        return $this->jobs->getPending($request->query('starting_at') ?: -1)->filter(function ($job) use ($tag) {
+            return in_array($tag, json_decode($job->payload)->tags);
+        })->map(function ($job) {
+            return $this->decode($job);
+        })->values();
     }
 
     /**

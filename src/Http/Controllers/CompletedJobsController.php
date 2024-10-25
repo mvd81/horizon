@@ -3,9 +3,7 @@
 namespace Laravel\Horizon\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Laravel\Horizon\Contracts\JobRepository;
-use Laravel\Horizon\Contracts\TagRepository;
 
 class CompletedJobsController extends Controller
 {
@@ -17,31 +15,20 @@ class CompletedJobsController extends Controller
     public $jobs;
 
     /**
-     * The tag repository implementation.
-     *
-     * @var \Laravel\Horizon\Contracts\TagRepository
-     */
-    public $tags;
-
-    public string $previousTag = '';
-
-    /**
      * Create a new controller instance.
      *
      * @param \Laravel\Horizon\Contracts\JobRepository  $jobs
-     * @param \Laravel\Horizon\Contracts\TagRepository $tags
      * @return void
      */
-    public function __construct(JobRepository $jobs, TagRepository $tags)
+    public function __construct(JobRepository $jobs)
     {
         parent::__construct();
 
         $this->jobs = $jobs;
-        $this->tags = $tags;
     }
 
     /**
-     * Get all of the completed jobs.
+     * Get all the completed jobs.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
@@ -61,7 +48,7 @@ class CompletedJobsController extends Controller
     }
 
     /**
-     * Paginate the failed jobs for the request.
+     * Paginate the completed jobs for the request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Support\Collection
@@ -74,14 +61,14 @@ class CompletedJobsController extends Controller
     }
 
     /**
-     * Paginate the failed jobs for the request and tag.
+     * Paginate the completed jobs for the request and tag.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     * @param $tag
      * @return \Illuminate\Support\Collection
      */
     protected function paginateByTag(Request $request, $tag)
     {
-
         return $this->jobs->getCompleted($request->query('starting_at') ?: -1)->filter(function ($job) use ($tag) {
             return in_array($tag, json_decode($job->payload)->tags);
         })->map(function ($job) {
