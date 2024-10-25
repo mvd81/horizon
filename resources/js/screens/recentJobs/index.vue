@@ -8,6 +8,7 @@
         data() {
             return {
                 tagSearchPhrase: '',
+                currentSearchPhrase: '',
                 searchTimeout: null,
                 ready: false,
                 loadingNewEntries: false,
@@ -73,8 +74,9 @@
                 this.$http.get(Horizon.basePath + '/api/jobs/' + this.$route.params.type + '?starting_at=' + starting + tagQuery + '&limit=' + this.perPage)
                     .then(response => {
                         if (!this.$root.autoLoadsNewEntries && refreshing && this.jobs.length && response.data.jobs[0]?.id !== this.jobs[0]?.id) {
-                            this.hasNewEntries = true;
-                            this.loadNewEntries()
+
+                            this.isNewTagSearch() ? this.loadNewEntries() :  this.hasNewEntries = true;
+
                         } else {
                             this.jobs = response.data.jobs;
 
@@ -85,7 +87,6 @@
                     });
             },
 
-
             loadNewEntries() {
                 this.jobs = [];
 
@@ -94,6 +95,22 @@
                 this.hasNewEntries = false;
             },
 
+
+            /**
+             * Check if we need to search for a new tag + update the current tag.
+             * @returns {boolean}
+             */
+            isNewTagSearch() {
+
+                let isNewSearch = false;
+                if (this.tagSearchPhrase != this.currentSearchPhrase) {
+                    isNewSearch = true;
+                }
+
+                this.currentSearchPhrase = this.tagSearchPhrase;
+
+                return isNewSearch;
+            },
 
             /**
              * Refresh the jobs every period of time.
