@@ -74,6 +74,7 @@
                     .then(response => {
                         if (!this.$root.autoLoadsNewEntries && refreshing && this.jobs.length && response.data.jobs[0]?.id !== this.jobs[0]?.id) {
                             this.hasNewEntries = true;
+                            this.loadNewEntries()
                         } else {
                             this.jobs = response.data.jobs;
 

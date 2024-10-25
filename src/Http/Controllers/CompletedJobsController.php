@@ -23,6 +23,8 @@ class CompletedJobsController extends Controller
      */
     public $tags;
 
+    public string $previousTag = '';
+
     /**
      * Create a new controller instance.
      *
@@ -50,9 +52,7 @@ class CompletedJobsController extends Controller
             ? $this->paginate($request)
             : $this->paginateByTag($request, $request->query('tag'));
 
-        $total = $request->query('tag')
-            ? $this->tags->count('completed:'.$request->query('tag'))
-            : $this->jobs->countCompleted();
+        $total = $jobs->count();
 
         return [
             'jobs' => $jobs,
