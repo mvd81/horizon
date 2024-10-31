@@ -4,6 +4,7 @@ namespace Laravel\Horizon\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Laravel\Horizon\Contracts\JobRepository;
+use Laravel\Horizon\Contracts\TagRepository;
 
 class PendingJobsController extends Controller
 {
@@ -15,16 +16,25 @@ class PendingJobsController extends Controller
     public $jobs;
 
     /**
+     * The tag repository implementation.
+     *
+     * @var \Laravel\Horizon\Contracts\TagRepository
+     */
+    public $tags;
+
+    /**
      * Create a new controller instance.
      *
-     * @param  \Laravel\Horizon\Contracts\JobRepository  $jobs
+     * @param \Laravel\Horizon\Contracts\JobRepository $jobs
+     * @param \Laravel\Horizon\Contracts\TagRepository $tags
      * @return void
      */
-    public function __construct(JobRepository $jobs)
+    public function __construct(JobRepository $jobs, TagRepository $tags)
     {
         parent::__construct();
 
         $this->jobs = $jobs;
+        $this->tags = $tags;
     }
 
     /**
@@ -39,7 +49,9 @@ class PendingJobsController extends Controller
             ? $this->paginate($request)
             : $this->paginateByTag($request, $request->query('tag'));
 
-        $total = $jobs->count();
+        $total = $request->query('tag')
+            ? $this->tags->count('pending:'.$request->query('tag'))
+            : $this->jobs->countPending();
 
         return [
             'jobs' => $jobs,
@@ -69,11 +81,15 @@ class PendingJobsController extends Controller
      */
     protected function paginateByTag(Request $request, $tag)
     {
-        return $this->jobs->getPending($request->query('starting_at') ?: -1)->filter(function ($job) use ($tag) {
-            return in_array($tag, json_decode($job->payload)->tags);
-        })->map(function ($job) {
+        $jobIds = $this->tags->paginate(
+            'pending:'.$tag, ($request->query('starting_at') ?: -1) + 1, 50
+        );
+
+        $startingAt = $request->query('starting_at', 0);
+
+        return $this->jobs->getJobs($jobIds, $startingAt)->map(function ($job) {
             return $this->decode($job);
-        })->values();
+        });
     }
 
     /**

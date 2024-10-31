@@ -6,6 +6,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Redis\Factory as RedisFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Laravel\Horizon\Contracts\JobRepository;
 use Laravel\Horizon\JobPayload;
 use Laravel\Horizon\LuaScripts;
@@ -541,6 +542,8 @@ class RedisJobRepository implements JobRepository
      */
     public function trimRecentJobs()
     {
+        \Log::info('trim');
+
         $this->connection()->pipeline(function ($pipe) {
             $pipe->zremrangebyscore(
                 'recent_jobs',
@@ -566,6 +569,15 @@ class RedisJobRepository implements JobRepository
                 '+inf'
             );
 
+            //$cursor = 0;
+            //do {
+            //    list($cursor, $keys) = $pipe->scan($cursor, 'MATCH', 'completed:*');
+            //
+            //    foreach ($keys as $key) {
+            //        $pipe->zremrangebyscore($key, CarbonImmutable::now()->subMinutes($this->completedJobExpires)->getTimestamp() * -1, '+inf');
+            //    }
+            //} while ($cursor);
+
             $pipe->zremrangebyscore(
                 'silenced_jobs',
                 CarbonImmutable::now()->subMinutes($this->completedJobExpires)->getTimestamp() * -1,
@@ -583,6 +595,18 @@ class RedisJobRepository implements JobRepository
     {
         $this->connection()->zremrangebyscore(
             'failed_jobs', CarbonImmutable::now()->subMinutes($this->failedJobExpires)->getTimestamp() * -1, '+inf'
+        );
+    }
+
+    /**
+     * Trim the completed job list.
+     *
+     * @return void
+     */
+    public function trimCompletedJobs()
+    {
+        $this->connection()->zremrangebyscore(
+            'completed_jobs', CarbonImmutable::now()->subMinutes($this->completedJobExpires)->getTimestamp() * -1, '+inf'
         );
     }
 

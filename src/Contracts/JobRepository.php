@@ -202,6 +202,13 @@ interface JobRepository
     public function trimFailedJobs();
 
     /**
+     * Trim the failed job list.
+     *
+     * @return void
+     */
+    public function trimCompletedJobs();
+
+    /**
      * Trim the monitored job list.
      *
      * @return void
