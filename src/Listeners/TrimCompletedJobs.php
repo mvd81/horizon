@@ -23,7 +23,7 @@ class TrimCompletedJobs
     public $frequency = 5040;
 
     /**
-     * Handle the event
+     * Handle the event.
      *
      * @param  \Laravel\Horizon\Events\MasterSupervisorLooped  $event
      * @return void
