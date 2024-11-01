@@ -45,9 +45,9 @@ class CompletedJobsController extends Controller
      */
     public function index(Request $request)
     {
-        $jobs = ! $request->query('tag')
-            ? $this->paginate($request)
-            : $this->paginateByTag($request, $request->query('tag'));
+        $jobs = $request->query('tag')
+            ? $this->paginateByTag($request, $request->query('tag'))
+            : $this->paginate($request);
 
         $total = $request->query('tag')
             ? $this->tags->count('completed:'.$request->query('tag'))
@@ -57,18 +57,6 @@ class CompletedJobsController extends Controller
             'jobs' => $jobs,
             'total' => $total,
         ];
-
-        // Old
-        //$jobs = ! $request->query('tag')
-        //    ? $this->paginate($request)
-        //    : $this->paginateByTag($request, $request->query('tag'));
-        //
-        //$total = $jobs->count();
-        //
-        //return [
-        //    'jobs' => $jobs,
-        //    'total' => $total,
-        //];
     }
 
     /**
@@ -102,13 +90,6 @@ class CompletedJobsController extends Controller
         return $this->jobs->getJobs($jobIds, $startingAt)->map(function ($job) {
             return $this->decode($job);
         });
-
-        //old
-        //return $this->jobs->getCompleted($request->query('starting_at') ?: -1)->filter(function ($job) use ($tag) {
-        //    return in_array($tag, json_decode($job->payload)->tags);
-        //})->map(function ($job) {
-        //    return $this->decode($job);
-        //})->values();
     }
 
 

@@ -18,19 +18,22 @@ class StoreTagsForCompletedTest extends IntegrationTest
         m::close();
     }
 
-    public function test_temporary_completed_job_should_be_deleted_when_the_main_job_is_deleted(): void
+    public function test_completed_tag_is_added_when_job_completes(): void
     {
         config()->set('horizon.trim.completed', 120);
 
         $tagRepository = m::mock(TagRepository::class);
 
         $tagRepository->shouldReceive('addTemporary')->once()->with(120, '1', ['completed:foobar'])->andReturn([]);
+        $tagRepository->shouldReceive('monitored')->once()->andReturn([]);
+        $tagRepository->shouldReceive('forgetJobs')->once()->andReturn([]);
 
         $this->instance(TagRepository::class, $tagRepository);
 
         $this->app->make(Dispatcher::class)->dispatch(new JobDeleted(
             new CompletedJob(), '{"id":"1","displayName":"displayName","tags":["foobar"]}'
         ));
+
     }
 }
 

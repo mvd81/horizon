@@ -2,11 +2,6 @@
 
 namespace Laravel\Horizon;
 
-use App\Packages\horizon\src\Listeners\ForgetJobInPendingTags;
-use App\Packages\horizon\src\Listeners\StoreTagsForCompletedJob;
-use App\Packages\horizon\src\Listeners\StoreTagsForPendingJob;
-use App\Packages\horizon\src\Listeners\TrimCompletedJobs;
-
 trait EventMap
 {
     /**
@@ -18,7 +13,7 @@ trait EventMap
         Events\JobPushed::class => [
             Listeners\StoreJob::class,
             Listeners\StoreMonitoredTags::class,
-            StoreTagsForPendingJob::class,
+            Listeners\StoreTagsForPendingJob::class,
         ],
 
         Events\JobReserved::class => [
@@ -32,8 +27,8 @@ trait EventMap
 
         Events\JobDeleted::class => [
             Listeners\MarkJobAsComplete::class,
-            StoreTagsForCompletedJob::class,
-            ForgetJobInPendingTags::class,
+            Listeners\StoreTagsForCompletedJob::class,
+            Listeners\ForgetJobInPendingTags::class,
             Listeners\UpdateJobMetrics::class,
         ],
 
@@ -58,7 +53,6 @@ trait EventMap
         Events\MasterSupervisorLooped::class => [
             Listeners\TrimRecentJobs::class,
             Listeners\TrimFailedJobs::class,
-            //Listeners\TrimCompletedJob::class,
             Listeners\TrimMonitoredJobs::class,
             Listeners\ExpireSupervisors::class,
             Listeners\MonitorMasterSupervisorMemory::class,

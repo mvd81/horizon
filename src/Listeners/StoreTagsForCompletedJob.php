@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Packages\horizon\src\Listeners;
+namespace Laravel\Horizon\Listeners;
 
 use Laravel\Horizon\Contracts\TagRepository;
 use Laravel\Horizon\Events\JobDeleted;
@@ -33,6 +33,10 @@ class StoreTagsForCompletedJob
      */
     public function handle(JobDeleted $event):void
     {
+        if ($event->job->hasFailed()) {
+            return;
+        }
+
         $tags = collect($event->payload->tags())->map(function ($tag) {
             return 'completed:'.$tag;
         })->all();

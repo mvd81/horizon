@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Packages\horizon\src\Listeners;
+namespace Laravel\Horizon\Listeners;
 
 use Illuminate\Support\Facades\Log;
 use Laravel\Horizon\Contracts\TagRepository;

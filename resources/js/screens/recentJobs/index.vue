@@ -56,7 +56,18 @@
                 this.page = 1;
 
                 this.loadJobs();
+            },
+
+            tagSearchPhrase() {
+                clearTimeout(this.searchTimeout);
+                clearInterval(this.interval);
+
+                this.searchTimeout = setTimeout(() => {
+                    this.loadJobs();
+                    this.refreshJobsPeriodically();
+                }, 500);
             }
+
         },
 
 
@@ -73,11 +84,17 @@
 
                 this.$http.get(Horizon.basePath + '/api/jobs/' + this.$route.params.type + '?starting_at=' + starting + tagQuery + '&limit=' + this.perPage)
                     .then(response => {
+
+                        if (!this.$root.autoLoadsNewEntries && refreshing && !response.data.jobs.length) {
+                            return;
+                        }
+
                         if (!this.$root.autoLoadsNewEntries && refreshing && this.jobs.length && response.data.jobs[0]?.id !== this.jobs[0]?.id) {
 
-                            this.isNewTagSearch() ? this.loadNewEntries() :  this.hasNewEntries = true;
+                            this.hasNewEntries = true;
 
                         } else {
+
                             this.jobs = response.data.jobs;
 
                             this.totalPages = Math.ceil(response.data.total / this.perPage);
@@ -93,23 +110,6 @@
                 this.loadJobs(-1, false);
 
                 this.hasNewEntries = false;
-            },
-
-
-            /**
-             * Check if we need to search for a new tag + update the current tag.
-             * @returns {boolean}
-             */
-            isNewTagSearch() {
-
-                let isNewSearch = false;
-                if (this.tagSearchPhrase != this.currentSearchPhrase) {
-                    isNewSearch = true;
-                }
-
-                this.currentSearchPhrase = this.tagSearchPhrase;
-
-                return isNewSearch;
             },
 
             /**
