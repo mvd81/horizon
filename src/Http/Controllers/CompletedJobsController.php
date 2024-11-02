@@ -91,7 +91,6 @@ class CompletedJobsController extends Controller
         });
     }
 
-
     /**
      * Decode the given job.
      *
