@@ -19,7 +19,6 @@ class ForgetPendingTagsForCompletedJobTest extends IntegrationTest
 
     public function test_if_pending_tags_are_removed_when_a_job_is_completed(): void
     {
-
         $tagRepository = m::mock(TagRepository::class);
 
         $tagRepository->shouldReceive('monitored')->once()->andReturn([]);

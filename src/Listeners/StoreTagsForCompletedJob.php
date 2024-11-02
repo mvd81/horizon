@@ -41,7 +41,7 @@ class StoreTagsForCompletedJob
             return 'completed:'.$tag;
         })->all();
 
-        if ( !empty($tags)) {
+        if (! empty($tags)) {
             $this->tags->addTemporary(
                 config('horizon.trim.completed', 2880), $event->payload->id(), $tags
             );

@@ -74,7 +74,7 @@ class CompletedJobsController extends Controller
     /**
      * Paginate the completed jobs for the request and tag.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  $tag
      * @return \Illuminate\Support\Collection
      */
