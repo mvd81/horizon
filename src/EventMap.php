@@ -13,6 +13,7 @@ trait EventMap
         Events\JobPushed::class => [
             Listeners\StoreJob::class,
             Listeners\StoreMonitoredTags::class,
+            Listeners\StoreTagsForPendingJob::class,
         ],
 
         Events\JobReserved::class => [
@@ -26,6 +27,8 @@ trait EventMap
 
         Events\JobDeleted::class => [
             Listeners\MarkJobAsComplete::class,
+            Listeners\StoreTagsForCompletedJob::class,
+            Listeners\ForgetJobInPendingTags::class,
             Listeners\UpdateJobMetrics::class,
         ],
 
