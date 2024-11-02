@@ -25,8 +25,8 @@ class CompletedJobsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param JobRepository $jobs
-     * @param TagRepository $tags
+     * @param  JobRepository  $jobs
+     * @param  TagRepository  $tags
      */
     public function __construct(JobRepository $jobs, TagRepository $tags)
     {
@@ -75,7 +75,7 @@ class CompletedJobsController extends Controller
      * Paginate the completed jobs for the request and tag.
      *
      * @param \Illuminate\Http\Request $request
-     * @param $tag
+     * @param  $tag
      * @return \Illuminate\Support\Collection
      */
     protected function paginateByTag(Request $request, $tag)

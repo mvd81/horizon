@@ -27,10 +27,10 @@ class RetrieveCompletedJobsFilteredByTagTest extends IntegrationTest
     public function test_can_retrieve_completed_jobs_without_tag_search()
     {
         $jobs = collect([
-            (object)['id' => 1, 'payload' => json_encode(['tags' => []])],
-            (object)['id' => 2, 'payload' => json_encode(['tags' => []])],
-            (object)['id' => 3, 'payload' => json_encode(['tags' => ['tag A']])],
-            (object)['id' => 4, 'payload' => json_encode(['tags' => []])]
+            (object) ['id' => 1, 'payload' => json_encode(['tags' => []])],
+            (object) ['id' => 2, 'payload' => json_encode(['tags' => []])],
+            (object) ['id' => 3, 'payload' => json_encode(['tags' => ['tag A']])],
+            (object) ['id' => 4, 'payload' => json_encode(['tags' => []])],
         ]);
 
         $this->jobRepository->method('getCompleted')->willReturn($jobs);
@@ -49,9 +49,9 @@ class RetrieveCompletedJobsFilteredByTagTest extends IntegrationTest
     {
         $tag = 'foobar';
         $jobs = collect([
-            (object)['id' => 3838, 'status' => 'completed', 'payload' => json_encode(['tags' => [$tag]])],
-            (object)['id' => 3838, 'status' => 'pending', 'payload' => json_encode(['tags' => [$tag]])],
-            (object)['id' => 9933, 'status' => 'completed', 'payload' => json_encode(['tags' => [$tag]])]
+            (object) ['id' => 3838, 'status' => 'completed', 'payload' => json_encode(['tags' => [$tag]])],
+            (object) ['id' => 3838, 'status' => 'pending', 'payload' => json_encode(['tags' => [$tag]])],
+            (object) ['id' => 9933, 'status' => 'completed', 'payload' => json_encode(['tags' => [$tag]])],
         ]);
 
         $this->tagRepository->method('paginate')->willReturn([$jobs[0]->id, $jobs[2]->id]);

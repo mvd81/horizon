@@ -31,14 +31,13 @@ class ForgetJobInPendingTags
      * @param  \Laravel\Horizon\Events\JobDeleted  $event
      * @return void
      */
-    public function handle(JobDeleted $event):void
+    public function handle(JobDeleted $event): void
     {
         $pendingTags = collect($event->payload->tags())->map(function ($tag) {
             return 'pending:'.$tag;
         })->all();
 
-        if (!empty($pendingTags)) {
-
+        if (! empty($pendingTags)) {
             $this->tags->forgetJobs($pendingTags, $event->payload->id());
         }
     }

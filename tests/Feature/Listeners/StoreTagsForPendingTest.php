@@ -3,7 +3,6 @@
 namespace Laravel\Horizon\Tests\Feature\Listeners;
 
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Queue\Jobs\Job;
 use Laravel\Horizon\Contracts\TagRepository;
 use Laravel\Horizon\Events\JobPushed;
 use Laravel\Horizon\Tests\IntegrationTest;
@@ -32,6 +31,5 @@ class StoreTagsForPendingTest extends IntegrationTest
         $this->app->make(Dispatcher::class)->dispatch(new JobPushed(
             '{"id":"1","displayName":"displayName","tags":["bar"]}'
         ));
-
     }
 }

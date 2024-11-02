@@ -2,7 +2,6 @@
 
 namespace Laravel\Horizon\Listeners;
 
-use Illuminate\Support\Facades\Log;
 use Laravel\Horizon\Contracts\TagRepository;
 use Laravel\Horizon\Events\JobPushed;
 
@@ -40,8 +39,7 @@ class StoreTagsForPendingJob
         })->all();
 
         // Only create tags if there are tags in the job payload.
-        if (!empty($tags)) {
-
+        if ( !empty($tags)) {
             $this->tags->addTemporary(
                 config('horizon.trim.pending', 2880), $event->payload->id(), $tags
             );

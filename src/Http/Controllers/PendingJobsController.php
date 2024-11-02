@@ -75,8 +75,8 @@ class PendingJobsController extends Controller
     /**
      * Paginate the pending jobs for the request and tag.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param $tag
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $tag
      * @return \Illuminate\Support\Collection
      */
     protected function paginateByTag(Request $request, $tag)

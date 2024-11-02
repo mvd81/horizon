@@ -33,7 +33,6 @@ class StoreTagsForCompletedTest extends IntegrationTest
         $this->app->make(Dispatcher::class)->dispatch(new JobDeleted(
             new CompletedJob(), '{"id":"1","displayName":"displayName","tags":["foobar"]}'
         ));
-
     }
 }
 

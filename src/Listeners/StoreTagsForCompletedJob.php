@@ -31,7 +31,7 @@ class StoreTagsForCompletedJob
      * @param  \Laravel\Horizon\Events\JobDeleted  $event
      * @return void
      */
-    public function handle(JobDeleted $event):void
+    public function handle(JobDeleted $event): void
     {
         if ($event->job->hasFailed()) {
             return;
@@ -41,8 +41,7 @@ class StoreTagsForCompletedJob
             return 'completed:'.$tag;
         })->all();
 
-        if (!empty($tags)) {
-
+        if ( !empty($tags)) {
             $this->tags->addTemporary(
                 config('horizon.trim.completed', 2880), $event->payload->id(), $tags
             );

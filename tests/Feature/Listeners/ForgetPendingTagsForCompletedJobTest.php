@@ -34,9 +34,9 @@ class ForgetPendingTagsForCompletedJobTest extends IntegrationTest
         $event = new JobDeleted(
             new PendingJob(),
             json_encode([
-                "id" => "1",
-                "displayName" => "displayName",
-                "tags" => ["foobar", "bar"]
+                'id' => '1',
+                'displayName' => 'displayName',
+                'tags' => ['foobar', 'bar'],
             ])
         );
 

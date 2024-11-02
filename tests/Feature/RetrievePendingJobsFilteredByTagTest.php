@@ -26,9 +26,9 @@ class RetrievePendingJobsFilteredByTagTest extends IntegrationTest
     public function test_can_retrieve_pending_jobs_without_tag_search()
     {
         $jobs = collect([
-            (object)['id' => 1, 'payload' => json_encode(['tags' => []])],
-            (object)['id' => 2, 'payload' => json_encode(['tags' => []])],
-            (object)['id' => 3, 'payload' => json_encode(['tags' => ['tag 1']])],
+            (object) ['id' => 1, 'payload' => json_encode(['tags' => []])],
+            (object) ['id' => 2, 'payload' => json_encode(['tags' => []])],
+            (object) ['id' => 3, 'payload' => json_encode(['tags' => ['tag 1']])],
         ]);
 
         $this->jobRepository->method('getPending')->willReturn($jobs);
@@ -47,9 +47,9 @@ class RetrievePendingJobsFilteredByTagTest extends IntegrationTest
     {
         $tag = 'developer';
         $jobs = collect([
-            (object)['id' => 1093, 'status' => 'pending', 'payload' => json_encode(['tags' => [$tag]])],
-            (object)['id' => 2839, 'status' => 'completed', 'payload' => json_encode(['tags' => [$tag]])],
-            (object)['id' => 2839, 'status' => 'pending', 'payload' => json_encode(['tags' => [$tag]])],
+            (object) ['id' => 1093, 'status' => 'pending', 'payload' => json_encode(['tags' => [$tag]])],
+            (object) ['id' => 2839, 'status' => 'completed', 'payload' => json_encode(['tags' => [$tag]])],
+            (object) ['id' => 2839, 'status' => 'pending', 'payload' => json_encode(['tags' => [$tag]])],
         ]);
 
         $this->tagRepository->method('paginate')->willReturn([$jobs[0]->id, $jobs[2]->id]);
