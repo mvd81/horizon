@@ -22,7 +22,6 @@ class StoreTagsForPendingJob
      */
     public function __construct(TagRepository $tags)
     {
-
         $this->tags = $tags;
     }
 
